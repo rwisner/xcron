@@ -652,6 +652,22 @@
 				$schedule["notify"] = $notify;
 			}
 
+			if (isset($schedule["notify-success"]))
+			{
+				if (is_string($schedule["notify-success"]))  $schedule["notify-success"] = array($schedule["notify-success"]);
+
+				if (!is_array($schedule["notify-success"]))  return array("success" => false, "error" => "Expected 'notify-success' to be an array for schedule '" . $name . "'.", "errorcode" => "invalid_notify_success");
+
+				$notify = array();
+				foreach ($schedule["notify-success"] as $val)
+				{
+					if (!isset($scheduleinfo["notifiers"][$val]) && !isset($scheduleinfo["notifiergroups"][$val]))  $warnings[] = "The notifier '" . $val . "' for schedule '" . $name . "' does not exist.";
+					else  $notify[] = $val;
+				}
+
+				$schedule["notify-success"] = $notify;
+			}
+
 			if (isset($schedule["user"]))
 			{
 				if (!$allusers)  return array("success" => false, "error" => "Must be " . (self::$windows ? "elevated" : "root") . " to run schedules as another user.  Error in schedule '" . $name . "'.", "errorcode" => "permission_denied");
@@ -953,7 +969,7 @@
 		}
 
 		// Sends a notification.  Response from this function is generally ignored except for test notifications.
-		public static function NotifyScheduleResult(&$notifiers, &$cachedata, &$schedules, $schedulekey, $name, $data, $force = false)
+		public static function NotifyScheduleResult(&$notifiers, &$cachedata, &$schedules, $schedulekey, $name, $data, $force = false, $notifyfield = "notify")
 		{
 			$sinfo = &$schedules[$schedulekey];
 			$csinfo = &$cachedata["schedules"][$schedulekey][$name];
@@ -979,7 +995,7 @@
 				}
 			}
 
-			if (isset($csinfo["schedule"]["notify"]))  $notifykeys = $csinfo["schedule"]["notify"];
+			if (isset($csinfo["schedule"][$notifyfield]))  $notifykeys = $csinfo["schedule"][$notifyfield];
 			else if (isset($sinfo["notifiergroups"]["default"]))  $notifykeys = array("default");
 			else  return array("success" => false, "error" => "No notifiers for schedule.", "errorcode" => "no_notifiers");
 
