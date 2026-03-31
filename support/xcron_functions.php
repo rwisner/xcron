@@ -9,7 +9,7 @@
 		protected static $scheduleparams = array(
 			"tz" => true, "base_weekday" => true, "reload_at_start" => true, "reload_at_boot" => true, "schedule" => true,
 			"allow_remote_time" => true, "output_file" => true, "alert_after" => true, "term_after" => true, "term_output" => true, "stderr_error" => true,
-			"notify" => true, "user" => true, "win_elevated" => true, "dir" => true, "cmds" => true, "env" => true,
+			"notify" => true, "notify-success" => true, "user" => true, "win_elevated" => true, "dir" => true, "cmds" => true, "env" => true,
 			"random_delay" => true, "min_uptime" => true, "min_battery" => true, "max_cpu" => true, "max_ram" => true,
 			"depends_on" => true, "retry_freq" => true, "password" => true, "max_queue" => true, "max_running" => true
 		);
